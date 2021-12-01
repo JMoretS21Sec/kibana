@@ -51,28 +51,26 @@ echo " -- Running on OS: $OS"
 
 nodeUrl="https://us-central1-elastic-kibana-184716.cloudfunctions.net/kibana-ci-proxy-cache/dist/v$nodeVersion/node-v$nodeVersion-${OS}-${classifier}"
 
-if [[ "$installNode" == "true" ]]; then
-  echo " -- node: version=v${nodeVersion} dir=$nodeDir"
+echo " -- node: version=v${nodeVersion} dir=$nodeDir"
 
-  echo " -- setting up node.js"
-  if [ -x "$nodeBin/node" ] && [ "$("$nodeBin/node" --version)" == "v$nodeVersion" ]; then
-    echo " -- reusing node.js install"
+echo " -- setting up node.js"
+if [ -x "$nodeBin/node" ] && [ "$("$nodeBin/node" --version)" == "v$nodeVersion" ]; then
+  echo " -- reusing node.js install"
+else
+  if [ -d "$nodeDir" ]; then
+    echo " -- clearing previous node.js install"
+    rm -rf "$nodeDir"
+  fi
+
+  echo " -- downloading node.js from $nodeUrl"
+  mkdir -p "$nodeDir"
+  if [[ "$OS" == "win" ]]; then
+    nodePkg="$nodeDir/${nodeUrl##*/}"
+    curl --silent -L -o "$nodePkg" "$nodeUrl"
+    unzip -qo "$nodePkg" -d "$nodeDir"
+    mv "${nodePkg%.*}" "$nodeBin"
   else
-    if [ -d "$nodeDir" ]; then
-      echo " -- clearing previous node.js install"
-      rm -rf "$nodeDir"
-    fi
-
-    echo " -- downloading node.js from $nodeUrl"
-    mkdir -p "$nodeDir"
-    if [[ "$OS" == "win" ]]; then
-      nodePkg="$nodeDir/${nodeUrl##*/}"
-      curl --silent -L -o "$nodePkg" "$nodeUrl"
-      unzip -qo "$nodePkg" -d "$nodeDir"
-      mv "${nodePkg%.*}" "$nodeBin"
-    else
-      curl --silent -L "$nodeUrl" | tar -xz -C "$nodeDir" --strip-components=1
-    fi
+    curl --silent -L "$nodeUrl" | tar -xz -C "$nodeDir" --strip-components=1
   fi
 fi
 
