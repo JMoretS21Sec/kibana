@@ -1,8 +1,6 @@
 steps:
-  - command: .buildkite/scripts/bootstrap.sh
-    label: Bootstrap
+  - command: .buildkite/scripts/steps/bazel_cache/bootstrap_mac.sh
+    label: Bootstrap (MacOS Intel)
     agents:
       queue: macos-intel
-    key: build
-    if: "build.env('KIBANA_BUILD_ID') == null || build.env('KIBANA_BUILD_ID') == ''"
     timeout_in_minutes: 60
