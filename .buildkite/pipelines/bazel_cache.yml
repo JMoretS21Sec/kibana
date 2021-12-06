@@ -1,5 +1,8 @@
 steps:
   - label: ':pipeline: Create pipeline with priority'
+    concurrency_group: bazel_macos
+    concurrency: 1
+    concurrency_method: eager
     command: |
       if [[ "$${BUILDKITE_BRANCH}" == "$${BUILDKITE_PIPELINE_DEFAULT_BRANCH}" ]]; then
         export PRIORITY=1
@@ -14,4 +17,7 @@ steps:
         agents:
           queue: macos-intel
         timeout_in_minutes: 60
+        concurrency_group: bazel_macos
+        concurrency: 1
+        concurrency_method: eager
       YAML
