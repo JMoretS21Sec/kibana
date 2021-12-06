@@ -1,6 +1,12 @@
 steps:
   - command: .buildkite/scripts/steps/bazel_cache/bootstrap_mac.sh
-    label: Bootstrap (MacOS Intel)
+    label: Bootstrap (MacOS x86)
     agents:
       queue: macos-intel
+    timeout_in_minutes: 60
+
+  - command: .buildkite/scripts/steps/bazel_cache/bootstrap_linux.sh
+    label: Bootstrap (Linux x86)
+    agents:
+      queue: c2-8
     timeout_in_minutes: 60
